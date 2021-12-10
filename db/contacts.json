@@ -48,9 +48,15 @@
     "phone": "(233) 738-2360"
   },
   {
-    "id": "9",
-    "name": "Thomas Lucas",
-    "email": "nec@Nulla.com",
-    "phone": "(704) 398-7993"
+    "id": "a80c2b46-e732-4bce-b1f4-7eb9ebc11380",
+    "name": "Vlad",
+    "email": "vlad2@mail.com",
+    "phone": "1233456"
+  },
+  {
+    "id": "1e70d81b-06e0-46fe-b243-26c088cb170c",
+    "name": "Petro",
+    "email": "mail@mail.com",
+    "phone": "+380974567845"
   }
 ]

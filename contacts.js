@@ -1,6 +1,6 @@
 const fs = require("fs").promises;
 const path = require("path");
-const { v4: uuidv4 } = require("uuid");
+const { v4 } = require("uuid");
 
 const contactsPath = path.join(__dirname, "./db/contacts.json");
 
@@ -22,7 +22,6 @@ async function getContactById(contactId) {
     if (!result) {
       return null;
     }
-    console.log(result);
     return result;
   } catch (error) {
     console.log(error);
@@ -30,35 +29,32 @@ async function getContactById(contactId) {
 }
 
 async function removeContact(contactId) {
-  const data = await listContacts();
-  const idx = data.findIndex((item) => item.id === contactId);
-  if (idx === -1) {
-    return null;
+  try {
+    const data = await listContacts();
+    const idx = data.findIndex((item) => item.id === contactId);
+    if (idx === -1) {
+      return null;
+    }
+    const newContacts = data.filter((_, index) => index !== idx);
+    await fs.writeFile(contactsPath, JSON.stringify(newContacts, null, 2));
+    return data[idx];
+  } catch (error) {
+    console.log(error.message);
   }
-  const newContacts = data.filter((_, index) => index !== idx);
-  await fs.writeFile(contactsPath, JSON.stringify(newContacts, null, 2));
-  return data[idx];
   // const remove = data.splice(idx, 1);
   // await listContacts(data);
   // return remove;
 }
 
 async function addContact(name, email, phone) {
-  fs.readFile(contactsPath, { encoding: "utf8" }, (error, data) => {
-    if (error) {
-      console.log(error.message);
-    }
-    const contacts = JSON.parse(data);
-    const contactsNew = { id: uuidv4(), name, email, phone };
-    const contactsList = JSON.stringify([contactsNew, ...contacts], null, "\t");
-    fs.writeFile(contactsPath, contactsList, (error) => {
-      if (error) console.error(error);
-    });
-  });
   try {
-    addContact();
+    const newObj = { id: v4(), name, email, phone };
+    const list = await listContacts();
+    const newList = [...list, newObj];
+    fs.writeFile(contactsPath, JSON.stringify(newList, null, 2));
+    return newObj;
   } catch (error) {
-    next(error);
+    console.log(error);
   }
 }
 
